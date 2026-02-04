@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <title>VOTRE STUDIO</title>
+</head>
+<body class="studio-body">
+    <nav class="studio-nav">
+        <a href="/">← RETOUR</a>
+        <div class="total">TOTAL : <span id="total-price">0.00</span> €</div>
+        <button onclick="localStorage.removeItem('myOutfit');location.reload()">EFFACER</button>
+    </nav>
+
+    <div id="outfit-canvas">
+        <div class="mannequin"></div>
+        <div id="container"></div>
+    </div>
+
+    <script>
+        window.onload = () => {
+            const items = JSON.parse(localStorage.getItem('myOutfit')) || [];
+            let total = 0;
+            items.forEach(item => {
+                const img = document.createElement('img');
+                img.src = item.img;
+                img.className = 'piece';
+                document.getElementById('container').appendChild(img);
+                total += item.price;
+                makeDraggable(img);
+            });
+            document.getElementById('total-price').innerText = total.toFixed(2);
+        };
+
+        function makeDraggable(el) {
+            interact(el).draggable({
+                listeners: {
+                    move(event) {
+                        const t = event.target;
+                        const x = (parseFloat(t.getAttribute('data-x')) || 0) + event.dx;
+                        const y = (parseFloat(t.getAttribute('data-y')) || 0) + event.dy;
+                        t.style.transform = `translate(${x}px, ${y}px)`;
+                        t.setAttribute('data-x', x); t.setAttribute('data-y', y);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

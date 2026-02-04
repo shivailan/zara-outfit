@@ -1,0 +1,21 @@
+<nav class="main-nav">
+    <div class="nav-left">
+        <a href="/" class="logo">STUDIO</a>
+    </div>
+    <div class="nav-center">
+        <a href="/?cat=7616" class="<%= typeof currentCat !== 'undefined' && currentCat == '7616' ? 'active' : '' %>">Collections</a>
+        <a href="/?cat=4208" class="<%= typeof currentCat !== 'undefined' && currentCat == '4208' ? 'active' : '' %>">Silhouettes</a>
+        <a href="/?cat=4209" class="<%= typeof currentCat !== 'undefined' && currentCat == '4209' ? 'active' : '' %>">Accessoires</a>
+    </div>
+    <div class="nav-right">
+        <% if (locals.isLoggedIn) { %>
+            <a href="/logout" class="auth-link">DÉCONNEXION</a>
+        <% } else { %>
+            <a href="/register" class="auth-link">CONNEXION</a>
+        <% } %>
+        <a href="/studio" class="studio-link">
+            <span>MON STUDIO</span>
+            <div class="dot"></div>
+        </a>
+    </div>
+</nav>

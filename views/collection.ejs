@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>COLLECTION — L'ÉDIT</title>
+</head>
+<body class="collection-view">
+    <header class="collection-nav">
+        <a href="/" class="brand-logo">STUDIO</a>
+        <div class="nav-filters">
+            <a href="/collection?cat=7616" class="<%= currentCat == '7616' ? 'active' : '' %>">Hauts</a>
+            <a href="/collection?cat=4208" class="<%= currentCat == '4208' ? 'active' : '' %>">Bas</a>
+            <a href="/collection?cat=4209" class="<%= currentCat == '4209' ? 'active' : '' %>">Accessoires</a>
+        </div>
+        <a href="/studio" class="studio-trigger">
+            <span>STUDIO</span>
+            <div class="cart-count" id="count">0</div>
+        </a>
+    </header>
+
+    <main class="luxury-container">
+        <div class="luxury-grid">
+            <% products.forEach((p, index) => { %>
+                <div class="product-card <%= index % 3 === 0 ? 'tall' : '' %>" 
+                     onclick="saveToStudio('<%= p.image %>', '<%= p.priceValue %>')">
+                    <div class="image-wrapper">
+                        <img src="<%= p.image %>" alt="<%= p.name %>" loading="lazy">
+                        <div class="hover-action">
+                            <span>AJOUTER AU LOOK</span>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name"><%= p.name %></h3>
+                        <p class="product-price"><%= p.priceText %></p>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </main>
+
+    <script>
+        function saveToStudio(img, price) {
+            let selection = JSON.parse(localStorage.getItem('outfit')) || [];
+            selection.push({ img, price: parseFloat(price) });
+            localStorage.setItem('outfit', JSON.stringify(selection));
+            
+            // Animation du compteur
+            updateCount();
+            
+            // Petit feedback visuel discret au lieu d'une alerte moche
+            const toast = document.createElement('div');
+            toast.className = 'toast-feedback';
+            toast.innerText = 'Ajouté au studio';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        function updateCount() {
+            const items = JSON.parse(localStorage.getItem('outfit')) || [];
+            document.getElementById('count').innerText = items.length;
+        }
+        
+        updateCount();
+    </script>
+</body>
+</html>
