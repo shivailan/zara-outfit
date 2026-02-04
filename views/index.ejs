@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <title>ZARA — L'EXPÉRIENCE STUDIO</title>
+</head>
+<body>
+
+    <section id="landing">
+        <div class="hero-content">
+            <h1 class="parallax-title" data-speed="0.1">NEW<br>LOOKS</h1>
+            <p class="hero-desc">L'expression de soi à travers la curation digitale.</p>
+            <button class="cta-explore" onclick="scrollToStudio()">DÉCOUVRIR LE STUDIO</button>
+        </div>
+        <div class="hero-gallery">
+            <div class="gallery-item main"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80"></div>
+            <div class="gallery-item small" data-speed="0.2"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=400"></div>
+        </div>
+    </section>
+
+    <section id="main-app">
+        <aside id="sidebar-glass">
+            <div class="logo">ZARA</div>
+            <nav class="categories">
+                <a href="/?cat=7616#main-app" class="<%= currentCat == '7616' ? 'active' : '' %>">Hauts</a>
+                <a href="/?cat=4208#main-app" class="<%= currentCat == '4208' ? 'active' : '' %>">Bas</a>
+                <a href="/?cat=4209#main-app" class="<%= currentCat == '4209' ? 'active' : '' %>">Accessoires</a>
+            </nav>
+
+            <div class="product-grid scroll-container">
+                <% products.forEach(p => { %>
+                    <div class="product-item" onclick="addToOutfit('<%= p.image %>', <%= p.priceValue %>)">
+                        <div class="img-wrapper">
+                            <img src="<%= p.image %>" alt="<%= p.name %>">
+                        </div>
+                        <div class="product-meta">
+                            <span class="p-name"><%= p.name %></span>
+                            <span class="p-price"><%= p.priceText %></span>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </aside>
+
+        <main id="studio">
+            <div class="mannequin-guide"></div>
+            
+            <div id="outfit-canvas"></div>
+
+            <div class="studio-ui">
+                <div class="price-tag">
+                    <span class="label">Estimation</span>
+                    <span class="val"><span id="total-price">0.00</span> €</span>
+                </div>
+                <div class="studio-actions">
+                    <button onclick="resetStudio()">Nettoyer</button>
+                    <button class="btn-save">Enregistrer le look</button>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <script>
+        // Effet Parallaxe léger
+        window.addEventListener('scroll', () => {
+            const elements = document.querySelectorAll('[data-speed]');
+            elements.forEach(el => {
+                const speed = el.getAttribute('data-speed');
+                el.style.transform = `translateY(${window.scrollY * speed}px)`;
+            });
+        });
+
+        function scrollToStudio() {
+            document.getElementById('main-app').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        let total = 0;
+        function addToOutfit(imgSrc, price) {
+            const canvas = document.getElementById('outfit-canvas');
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.className = 'outfit-piece';
+            img.style.left = '50%';
+            img.style.top = '45%';
+            img.setAttribute('data-x', 0);
+            img.setAttribute('data-y', 0);
+            
+            canvas.appendChild(img);
+            total += price;
+            document.getElementById('total-price').innerText = total.toFixed(2);
+            makeDraggable(img);
+        }
+
+        function makeDraggable(element) {
+            interact(element).draggable({
+                listeners: {
+                    move (event) {
+                        const target = event.target;
+                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                        target.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
+                    }
+                }
+            });
+        }
+
+        function resetStudio() {
+            document.getElementById('outfit-canvas').innerHTML = '';
+            total = 0;
+            document.getElementById('total-price').innerText = '0.00';
+        }
+    </script>
+</body>
+</html>
