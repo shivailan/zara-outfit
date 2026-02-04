@@ -86,3 +86,77 @@ body { margin: 0; font-family: 'Montserrat', sans-serif; background: #fff; scrol
     background-color: #ff4d4d; /* Point rouge "Live" */
     border-radius: 50%;
 }
+
+/* public/css/style.css */
+.auth-body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f4f4;
+}
+
+.auth-container {
+    background: #fff;
+    padding: 60px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+}
+
+.auth-logo {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 32px;
+    text-decoration: none;
+    color: #000;
+    font-weight: 900;
+    display: block;
+    margin-bottom: 40px;
+}
+
+.auth-container h2 {
+    font-size: 11px;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+    color: #888;
+}
+
+.input-group { margin-bottom: 20px; }
+
+.input-group input {
+    width: 100%;
+    padding: 15px 0;
+    border: none;
+    border-bottom: 1px solid #eee;
+    font-size: 10px;
+    letter-spacing: 2px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus { border-bottom-color: #000; }
+
+.auth-btn {
+    width: 100%;
+    padding: 18px;
+    background: #000;
+    color: #fff;
+    border: none;
+    font-size: 10px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.auth-btn:hover { opacity: 0.8; }
+
+.error-msg {
+    color: #ff4d4d;
+    font-size: 9px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.auth-footer { font-size: 9px; margin-top: 30px; color: #aaa; }
+.auth-footer a { color: #000; text-decoration: none; font-weight: bold; }

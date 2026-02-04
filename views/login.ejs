@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/style.css">
-    <title>ZARA — Rejoindre le Studio</title>
+    <title>ZARA — CONNEXION</title>
 </head>
 <body class="auth-body">
     <div class="auth-container">
         <a href="/" class="auth-logo">STUDIO</a>
-        <h2>CRÉER UN COMPTE</h2>
+        <h2>SE CONNECTER</h2>
         
-        <% if (error) { %>
+        <% if (locals.error) { %>
             <div class="error-msg"><%= error %></div>
         <% } %>
 
-        <form action="/register" method="POST">
+        <form action="/login" method="POST">
             <div class="input-group">
                 <input type="text" name="username" placeholder="NOM D'UTILISATEUR" required>
             </div>
             <div class="input-group">
                 <input type="password" name="password" placeholder="MOT DE PASSE" required>
             </div>
-            <button type="submit" class="auth-btn">S'INSCRIRE</button>
+            <button type="submit" class="auth-btn">CONNEXION</button>
         </form>
         
-        <p class="auth-footer">DÉJÀ MEMBRE ? <a href="/login">SE CONNECTER</a></p>
+        <p class="auth-footer">PAS ENCORE MEMBRE ? <a href="/register">S'INSCRIRE</a></p>
     </div>
 </body>
 </html>
