@@ -2,19 +2,33 @@
     <div class="nav-left">
         <a href="/" class="logo">STUDIO</a>
     </div>
-    <div class="nav-center">
-        <a href="/?cat=7616" class="<%= typeof currentCat !== 'undefined' && currentCat == '7616' ? 'active' : '' %>">Collections</a>
-        <a href="/?cat=4208" class="<%= typeof currentCat !== 'undefined' && currentCat == '4208' ? 'active' : '' %>">Silhouettes</a>
-        <a href="/?cat=4209" class="<%= typeof currentCat !== 'undefined' && currentCat == '4209' ? 'active' : '' %>">Accessoires</a>
-    </div>
+
+<div class="nav-center">
+    <a href="/?cat=7616" class="<%= typeof currentCat !== 'undefined' && currentCat == '7616' ? 'active' : '' %>">Hauts</a>
+    <a href="/?cat=4208" class="<%= typeof currentCat !== 'undefined' && currentCat == '4208' ? 'active' : '' %>">Bas</a>
+    <a href="/?cat=4209" class="<%= typeof currentCat !== 'undefined' && currentCat == '4209' ? 'active' : '' %>">Chaussures</a>
+    <a href="/?cat=5006" class="<%= typeof currentCat !== 'undefined' && currentCat == '5006' ? 'active' : '' %>">Accessoires</a>
+<a href="/outfits" class="<%= currentCat === 'outfits' ? 'active' : '' %>">Looks</a></div>
+
     <div class="nav-right">
         <% if (locals.isLoggedIn) { %>
-            <a href="/logout" class="auth-link">DÉCONNEXION</a>
+            <div class="user-info-wrapper">
+                <div class="user-details">
+                    <span class="u-name"><%= user.toUpperCase() %></span>
+                    <span class="u-id"><%= userId %></span>
+                </div>
+                <a href="/logout" class="icon-link" title="Déconnexion">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                </a>
+            </div>
         <% } else { %>
-            <a href="/register" class="auth-link">CONNEXION</a>
+            <a href="/login" class="icon-link" title="Connexion">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </a>
         <% } %>
+
         <a href="/studio" class="studio-link">
-            <span>MON STUDIO</span>
+            <span class="studio-text">MON STUDIO</span>
             <div class="dot"></div>
         </a>
     </div>

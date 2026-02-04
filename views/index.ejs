@@ -37,13 +37,32 @@
         </div>
     </section>
 
-    <script>
-        function save(img, price) {
-            let outfit = JSON.parse(localStorage.getItem('myOutfit')) || [];
-            outfit.push({ img, price });
-            localStorage.setItem('myOutfit', JSON.stringify(outfit));
-            document.getElementById('count').innerText = outfit.length;
-        }
-    </script>
+<script>
+// Dans index.ejs, assure-toi que ta fonction reçoit l'ID ASOS
+function save(img, price, asosId) {
+    let outfit = JSON.parse(localStorage.getItem('myOutfit')) || [];
+    const params = new URLSearchParams(window.location.search);
+    const catId = params.get('cat') || '7616';
+
+    const newItem = {
+        img: img,
+        price: parseFloat(price),
+        catId: catId,
+        asosId: asosId, // ON AJOUTE L'ID ICI
+        x: 0, y: 0
+    };
+
+    // Remplacement si catégorie déjà présente
+    const index = outfit.findIndex(item => item.catId === catId);
+    if (index > -1) outfit[index] = newItem;
+    else outfit.push(newItem);
+
+    localStorage.setItem('myOutfit', JSON.stringify(outfit));
+    
+    // Animation du point rouge dans la navbar pour montrer qu'il y a du nouveau
+    document.querySelector('.dot').style.transform = 'scale(1.5)';
+    setTimeout(() => { document.querySelector('.dot').style.transform = 'scale(1)'; }, 300);
+}
+</script>
 </body>
 </html>

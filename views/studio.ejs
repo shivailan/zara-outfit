@@ -4,35 +4,113 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-    <title>VOTRE STUDIO</title>
+    <title>ZARA — CONFIGURATEUR</title>
 </head>
-<body class="studio-body">
-    <nav class="studio-nav">
-        <a href="/">← RETOUR</a>
-        <div class="total">TOTAL : <span id="total-price">0.00</span> €</div>
-        <button onclick="localStorage.removeItem('myOutfit');location.reload()">EFFACER</button>
-    </nav>
+<body class="studio-view">
+    <%- include('partials/navbar') %>
 
-    <div id="outfit-canvas">
-        <div class="mannequin"></div>
-        <div id="container"></div>
+    <div class="studio-layout">
+        <aside class="studio-sidebar">
+            <h2>VOTRE LOOK</h2>
+            <div class="selection-status">
+                <div class="status-item" id="status-7616"><span>HAUT</span> <div class="indicator"></div></div>
+                <div class="status-item" id="status-4208"><span>BAS</span> <div class="indicator"></div></div>
+                <div class="status-item" id="status-4209"><span>CHAUSSURES</span> <div class="indicator"></div></div>
+                <div class="status-item" id="status-5006"><span>ACCESSOIRE</span> <div class="indicator"></div></div>
+            </div>
+
+            <div class="import-external">
+    <p class="input-label">IMPORTER VIA URL</p>
+    <div class="url-input-group">
+        <input type="text" id="external-url" placeholder="Lien de l'image (https://...)">
+        <select id="external-cat">
+            <option value="7616">HAUT</option>
+            <option value="4208">BAS</option>
+            <option value="4209">CHAUSSURES</option>
+            <option value="5006">ACCESSOIRE</option>
+        </select>
+        <button onclick="importImage()" class="btn-import">+</button>
+    </div>
+</div>
+            
+            <div class="studio-actions">
+                <div class="price-display">TOTAL: <span id="total-price">0.00</span> €</div>
+                <% if (locals.isLoggedIn) { %>
+                    <button onclick="saveOutfit()" class="btn-save">SAUVEGARDER L'OUTFIT</button>
+                <% } else { %>
+                    <a href="/login" class="btn-save" style="text-align:center; text-decoration:none; display:block;">CONNECTEZ-VOUS POUR SAUVEGARDER</a>
+                <% } %>
+                <button onclick="clearStudio()" class="btn-reset">RÉINITIALISER</button>
+            </div>
+        </aside>
+
+        <main id="outfit-canvas">
+            <div class="mannequin-guide"></div>
+            <div id="layer-7616" class="layer"></div> 
+            <div id="layer-4208" class="layer"></div> 
+            <div id="layer-4209" class="layer"></div> 
+            <div id="layer-5006" class="layer"></div>
+        </main>
     </div>
 
     <script>
-        window.onload = () => {
-            const items = JSON.parse(localStorage.getItem('myOutfit')) || [];
-            let total = 0;
-            items.forEach(item => {
-                const img = document.createElement('img');
-                img.src = item.img;
-                img.className = 'piece';
-                document.getElementById('container').appendChild(img);
-                total += item.price;
-                makeDraggable(img);
-            });
-            document.getElementById('total-price').innerText = total.toFixed(2);
+        // Initialisation avec les 4 IDs
+        let outfitData = {
+            '7616': null, 
+            '4208': null, 
+            '4209': null,
+            '5006': null  
         };
 
+        window.onload = () => {
+            const items = JSON.parse(localStorage.getItem('myOutfit')) || [];
+            items.forEach(item => {
+                if (outfitData.hasOwnProperty(item.catId)) {
+                    outfitData[item.catId] = item;
+                }
+            });
+            renderOutfit();
+        };
+
+function renderOutfit() {
+    let total = 0;
+    const categories = ['7616', '4208', '4209', '5006'];
+    
+    categories.forEach(catId => {
+        const item = outfitData[catId];
+        const layer = document.getElementById(`layer-${catId}`);
+        const status = document.getElementById(`status-${catId}`);
+        layer.innerHTML = ''; 
+
+        if (item) {
+            const img = document.createElement('img');
+            img.src = item.img;
+            img.className = 'studio-piece pack-style';
+            
+            // --- DISPOSITION EN "PACK" (ÉCLATÉE) ---
+            if (catId === '7616') { // Haut (Gros plan au centre gauche)
+                img.style.top = "20%"; img.style.left = "15%"; img.style.width = "320px";
+            }
+            if (catId === '4208') { // Bas (Décalé à droite)
+                img.style.top = "25%"; img.style.left = "45%"; img.style.width = "300px";
+            }
+            if (catId === '4209') { // Chaussures (En bas à droite)
+                img.style.top = "60%"; img.style.left = "55%"; img.style.width = "180px";
+            }
+            if (catId === '5006') { // Accessoire (Petit, en haut à droite)
+                img.style.top = "10%"; img.style.left = "65%"; img.style.width = "150px";
+            }
+            
+            layer.appendChild(img);
+            status.classList.add('active');
+            total += parseFloat(item.price);
+            makeDraggable(img);
+        } else {
+            status.classList.remove('active');
+        }
+    });
+    document.getElementById('total-price').innerText = total.toFixed(2);
+}
         function makeDraggable(el) {
             interact(el).draggable({
                 listeners: {
@@ -41,11 +119,52 @@
                         const x = (parseFloat(t.getAttribute('data-x')) || 0) + event.dx;
                         const y = (parseFloat(t.getAttribute('data-y')) || 0) + event.dy;
                         t.style.transform = `translate(${x}px, ${y}px)`;
-                        t.setAttribute('data-x', x); t.setAttribute('data-y', y);
+                        t.setAttribute('data-x', x); 
+                        t.setAttribute('data-y', y);
                     }
                 }
             });
         }
+
+        function clearStudio() {
+            if(confirm("Voulez-vous réinitialiser votre tenue ?")) {
+                localStorage.removeItem('myOutfit');
+                location.reload();
+            }
+        }
+
+        async function saveOutfit() {
+            const itemsToSave = Object.values(outfitData).filter(i => i !== null);
+            
+            if (itemsToSave.length === 0) {
+                return alert("Ajoutez au moins un article pour sauvegarder !");
+            }
+
+            const total = document.getElementById('total-price').innerText;
+
+            try {
+                const response = await fetch('/studio/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        items: itemsToSave,
+                        totalPrice: parseFloat(total)
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert("✨ Outfit sauvegardé dans votre collection !");
+                } else {
+                    alert("Erreur : " + result.error);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Erreur lors de la sauvegarde.");
+            }
+        }
+
+        
     </script>
 </body>
 </html>

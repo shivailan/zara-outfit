@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>ZARA — COMMUNITY LOOKS</title>
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <div class="gallery-container">
+        <header class="gallery-header">
+            <h1>COMMUNITY LOOKS</h1>
+            <p>Cliquez sur une pièce pour l'acheter sur le site officiel.</p>
+        </header>
+
+        <div class="outfits-grid">
+            <% outfits.forEach(look => { %>
+                <article class="outfit-card">
+                    <div class="pack-preview flex-grid">
+                        <% look.items.forEach(item => { %>
+                            <% 
+                                // On détermine l'URL de redirection
+                                let targetUrl = "#";
+                                let badgeText = "SHOP";
+                                
+                                if (item.asosId && item.asosId !== 'external') {
+                                    targetUrl = `https://www.asos.com/fr/prd/${item.asosId}`;
+                                    badgeText = "ASOS";
+                                } else if (item.externalLink) {
+                                    targetUrl = item.externalLink;
+                                    badgeText = "LINK";
+                                }
+                            %>
+
+                            <a href="<%= targetUrl %>" target="_blank" class="piece-link-simple" title="Voir l'article">
+                                <img src="<%= item.img %>" class="preview-piece-simple" alt="Vêtement">
+                                <span class="shop-tag"><%= badgeText %></span>
+                            </a>
+                        <% }) %>
+                    </div>
+
+                    <div class="outfit-footer">
+                        <div class="meta">
+                            <span class="author">BY <%= look.creator ? look.creator.username.toUpperCase() : 'STUDIO' %></span>
+                            <span class="item-count"><%= look.items.length %> PIÈCES</span>
+                        </div>
+                        <div class="price-tag">
+                            <%= look.totalPrice > 0 ? look.totalPrice.toFixed(2) + ' €' : 'MIXED' %>
+                        </div>
+                    </div>
+                </article>
+            <% }) %>
+        </div>
+    </div>
+</body>
+</html>

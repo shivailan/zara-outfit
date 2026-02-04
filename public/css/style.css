@@ -160,3 +160,370 @@ body { margin: 0; font-family: 'Montserrat', sans-serif; background: #fff; scrol
 
 .auth-footer { font-size: 9px; margin-top: 30px; color: #aaa; }
 .auth-footer a { color: #000; text-decoration: none; font-weight: bold; }
+
+/*Profil*/
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 20px;
+}
+
+.user-name {
+    font-size: 10px;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+.user-id {
+    font-size: 8px;
+    color: #bbb;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.user-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    line-height: 1.2;
+}
+
+.u-name {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.u-id {
+    font-size: 7px;
+    color: #aaa;
+    letter-spacing: 0.5px;
+}
+
+.icon-link {
+    color: #000;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.icon-link:hover {
+    opacity: 0.5;
+}
+
+.studio-text {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+/* --- STUDIO LAYOUT --- */
+.studio-layout {
+    display: flex;
+    height: 100vh;
+    padding-top: 80px; /* Espace pour la navbar */
+    background: #f8f8f8;
+}
+
+.studio-sidebar {
+    width: 300px;
+    background: #fff;
+    padding: 40px;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.studio-sidebar h2 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 1.5rem;
+    letter-spacing: -1px;
+}
+
+/* Indicateurs de catégories */
+.selection-status { margin-top: 40px; }
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #ccc;
+}
+.status-item.active { color: #000; font-weight: 700; }
+.indicator { width: 8px; height: 8px; border-radius: 50%; background: #eee; }
+.status-item.active .indicator { background: #000; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+
+/* Canvas *//* Fond du canvas plus doux pour faire ressortir le blanc des vêtements */
+#outfit-canvas {
+    flex-grow: 1;
+    position: relative;
+    background-color: #fdfdfd; /* Un blanc légèrement cassé */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* On réduit la taille des vêtements et on enlève l'aspect "bloc" */
+.studio-piece {
+    width: 280px; /* Taille réduite pour moins d'encombrement */
+    height: auto;
+    position: absolute;
+    cursor: grab;
+    /* Mix-blend-mode multiplie les couleurs sombres : 
+       cela rend le fond blanc des photos d'ASOS invisible sur le fond gris du studio */
+    mix-blend-mode: multiply; 
+    transition: transform 0.1s ease-out;
+    filter: contrast(1.05); /* Rend les couleurs un peu plus vives */
+}
+
+/* Gestion des couches (z-index) pour que la superposition soit logique */
+#layer-5006 { z-index: 10; } /* Accessoires (devant tout) */
+#layer-7616 { z-index: 5; }  /* Hauts */
+#layer-4208 { z-index: 3; }  /* Bas */
+#layer-4209 { z-index: 1; }  /* Chaussures (derrière le bas si pantalon large) */
+
+.studio-piece:active {
+    cursor: grabbing;
+    z-index: 100; /* Passe au premier plan quand on le déplace */
+}
+
+/* Amélioration du mannequin guide */
+.mannequin-guide {
+    position: absolute;
+    width: 400px;
+    height: 80%;
+    background: url('https://cdn.pixabay.com/photo/2014/04/03/10/32/businessman-310819_1280.png') center/contain no-repeat;
+    opacity: 0.05;
+    filter: grayscale(1);
+    pointer-events: none;
+}
+/* Boutons */
+.btn-save { background: #000; color: #fff; border: none; padding: 15px; width: 100%; cursor: pointer; font-size: 10px; letter-spacing: 2px; margin-bottom: 10px; }
+.btn-reset { background: none; border: 1px solid #ddd; padding: 15px; width: 100%; cursor: pointer; font-size: 10px; letter-spacing: 2px; }
+
+.gallery-container { padding: 120px 5% 50px; }
+.gallery-header { text-align: center; margin-bottom: 60px; }
+
+.outfits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.outfit-card {
+    background: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #eee;
+    transition: 0.3s;
+}
+/* Le container devient une ligne flexible */
+.pack-preview.flex-grid {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espace entre les vêtements */
+    background: #ffffff;
+    padding: 20px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+/* Chaque lien de vêtement */
+.piece-link-simple {
+    position: relative;
+    flex: 1; /* Chaque vêtement prend la même place */
+    max-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.piece-link-simple:hover {
+    transform: translateY(-5px);
+}
+
+/* L'image du vêtement */
+.preview-piece-simple {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+/* Petit badge "SHOP" discret qui apparaît au survol */
+.shop-tag {
+    position: absolute;
+    bottom: 0;
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: #000;
+    color: #fff;
+    padding: 2px 6px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.piece-link-simple:hover .shop-tag {
+    opacity: 1;
+}
+
+.import-external {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #ddd;
+}
+
+.input-label {
+    font-size: 9px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.url-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.url-input-group input, .url-input-group select {
+    padding: 10px;
+    border: 1px solid #eee;
+    font-size: 10px;
+    outline: none;
+}
+
+.btn-import {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-import:hover { background: #333; }
+
+/* Container principal */
+.gallery-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 120px 20px 50px;
+}
+
+.gallery-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.gallery-header h1 {
+    font-size: 40px;
+    letter-spacing: -1px;
+    font-weight: 300;
+}
+
+/* Grille d'outfits */
+.outfits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 40px;
+}
+
+/* Carte Outfit */
+.outfit-card {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    transition: all 0.4s ease;
+}
+
+.outfit-card:hover {
+    border-color: #000;
+    transform: translateY(-5px);
+}
+
+/* Alignement des vêtements en ligne */
+.pack-preview.flex-grid {
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 30px;
+    background: #f9f9f9; /* Fond très léger pour détacher les vêtements */
+}
+
+.piece-link-simple {
+    position: relative;
+    flex: 1;
+    max-width: 150px;
+    display: flex;
+    justify-content: center;
+}
+
+.preview-piece-simple {
+    width: 100%;
+    height: auto;
+    mix-blend-mode: multiply;
+    transition: transform 0.3s ease;
+}
+
+/* Infos du bas */
+.outfit-footer {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.meta .author {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.meta .item-count {
+    font-size: 9px;
+    color: #888;
+}
+
+.price-tag {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Badge Shop/Inspo */
+.shop-tag {
+    position: absolute;
+    top: 0;
+    background: #000;
+    color: #fff;
+    font-size: 8px;
+    padding: 2px 6px;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.piece-link-simple:hover .shop-tag { opacity: 1; }
+.shop-tag.label { opacity: 0.5; background: #666; }
